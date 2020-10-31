@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:project_quran/pages/splash.dart';
 import 'package:statusbar_util/statusbar_util.dart';
-
-import 'pages/home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,14 +12,14 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Al Qur’ān",
+    return GetMaterialApp(
+      title: "Offline Qur’ān",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.purple.shade900,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeView(),
+      home: SplashView(),
     );
   }
 }

@@ -4,8 +4,10 @@ import 'package:audio_service/audio_service.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_quran/bloc/quran_bloc.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:share/share.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -36,15 +38,24 @@ class _HomeViewState extends State<HomeView> {
     // MediaItem(id: 'assets/audio/100.mp3', album: 'null', title: 'null'),
     // MediaItem(id: 'assets/audio/101.mp3', album: 'null', title: 'null'),
   ];
+  Color color;
 
   @override
   void dispose() {
     AudioService.stop();
+    if (playing == true) {
+      setState(() {
+        color = Color(0xffBB8834);
+      });
+    } else {
+      color = Colors.white;
+    }
+
     super.dispose();
   }
 
   Future<int> _getDuration() async {
-    File audiofile = await audioCache.load('audio/051.mp3');
+    File audiofile = await audioCache.load('audio/Amma/81.mp3');
     await advancedPlayer.setUrl(
       audiofile.path,
     );
@@ -66,164 +77,255 @@ class _HomeViewState extends State<HomeView> {
           case ConnectionState.done:
             if (snapshot.hasError) return Text('Error: ${snapshot.error}');
             return Text(
-                '051.mp3 duration is: ${Duration(milliseconds: snapshot.data)}');
+                '81.mp3 duration is: ${Duration(milliseconds: snapshot.data)}');
         }
         return null; // unreachable
       },
     );
   }
 
+  bool playing = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff150927),
       appBar: AppBar(
-          title: Text(
-        'Al Qur’ān',
-        style:
-            TextStyle(color: Color(0xffBB8834), fontSize: 20, letterSpacing: 2),
-      )),
+        backgroundColor: Color(0xff150927),
+        iconTheme: IconThemeData(color: Color(0xffBB8834), size: 40),
+        actions: [
+          IconButton(
+            icon: FaIcon(FontAwesomeIcons.shareAlt),
+            onPressed: () => _onShare(context),
+          )
+        ],
+        title: Stack(children: [
+          Center(
+            child: Text(
+              'Al Qur’ān',
+              style: TextStyle(
+                  color: Color(0xffBB8834),
+                  fontSize: 24,
+                  letterSpacing: 2,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ]),
+        elevation: 0,
+      ),
       body: Card(
-        color: Color(0xff1D1133),
+        color: Color(0xff150927),
         child: Container(
           padding: EdgeInsets.all(20),
-          color: Colors.white,
+          // color: Colors.white,
           child: SingleChildScrollView(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 1.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 1.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah Al-Fātihah [The Opening]"),
+                      title: Text(
+                        "Surah Al-Fātihah الفاتحة\n[ The Opening ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
                       onTap: () {
-                        audioCache.play('audio/1.mp3');
+                        audioCache.play('audio/1.mp3',
+                            isNotification: playing == true);
                       },
                     ),
                   ),
                   SizedBox(height: 10),
                   SettingsTitle(title: 'Juzzu Ammah'),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 78.'),
-                        shape: RoundedRectangleBorder(),
+                          label: Text(
+                        ' 78.',
+                        style: TextStyle(color: Color(0xffBB8834)),
+                      )),
+                      title: Text(
+                        "Surah An-Naba’ \n[ The News ]",
+                        style: TextStyle(color: Colors.white),
                       ),
-                      title: Text("Surah An-Naba’ [The News]"),
-                      onTap: () => audioCache.play('audio/amma/78.mp3'),
+                      onTap: () => audioCache.play('audio/Amma/78.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 79.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 79.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah An-Nāzi’āt [The Extractors]"),
-                      onTap: () => audioCache.play('audio/amma/79.mp3'),
+                      title: Text(
+                        "Surah An-Nāzi’āt \n[ The Extractors ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/79.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 80.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 80.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah ‘Abasa [He Frowned]"),
-                      onTap: () => audioCache.play('audio/amma/80.mp3'),
+                      title: Text(
+                        "Surah ‘Abasa \n[ He Frowned ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/80.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 81.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 81.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah At-Takweer [The Wrapping]"),
-                      onTap: () => audioCache.play('audio/amma/81.mp3'),
+                      title: Text(
+                        "Surah At-Takweer \n[ The Wrapping ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/81.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 82.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 82.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah Al-Infitār [The Breaking Apart]"),
-                      onTap: () => audioCache.play('audio/amma/82.mp3'),
+                      title: Text(
+                        "Surah Al-Infitār \n[ The Breaking Apart ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/82.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 83.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 83.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah Al-Mutaffifeen [Those Who Give Less]"),
-                      onTap: () => audioCache.play('audio/amma/83.mp3'),
+                      title: Text(
+                        "Surah Al-Mutaffifeen \n[ Those Who Give Less ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/83.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 84.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 84.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah Al-Inshiqāq [The Splitting]"),
-                      onTap: () => audioCache.play('audio/amma/84.mp3'),
+                      title: Text(
+                        "Surah Al-Inshiqāq \n[ The Splitting ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/84.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 85.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 85.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah Al-Burūj [The Great Stars]"),
-                      onTap: () => audioCache.play('audio/amma/85.mp3'),
+                      title: Text(
+                        "Surah Al-Burūj \n[ The Great Stars ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/85.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 86.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 86.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah At-Tāriq [The Night-Comer]"),
-                      onTap: () => audioCache.play('audio/amma/86.mp3'),
+                      title: Text(
+                        "Surah At-Tāriq \n[ The Night-Comer ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/86.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 87.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 87.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah Al-A’lā [The Most High]"),
-                      onTap: () => audioCache.play('audio/amma/87.mp3'),
+                      title: Text(
+                        "Surah Al-A’lā \n[ The Most High ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/87.mp3'),
                     ),
                   ),
                   SizedBox(height: 10),
                   Card(
+                    color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
-                        label: Text(' 88.'),
-                        shape: RoundedRectangleBorder(),
+                        label: Text(
+                          ' 88.',
+                          style: TextStyle(color: Color(0xffBB8834)),
+                        ),
                       ),
-                      title: Text("Surah Al-Ghāshiyah [The Overwhelming]"),
-                      onTap: () => audioCache.play('audio/amma/88.mp3'),
+                      title: Text(
+                        "Surah Al-Ghāshiyah \n[ The Overwhelming ]",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () => audioCache.play('audio/Amma/88.mp3'),
                     ),
                   ),
                   getLocalFileDuration(),
@@ -316,6 +418,13 @@ class _HomeViewState extends State<HomeView> {
       child: Text('Start Listening'),
     );
   }
+
+  _onShare(BuildContext context) async {
+    final RenderBox box = context.findRenderObject();
+    await Share.share("Offline Quran App",
+        subject: "offline/Ouran.app",
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+  }
 }
 
 void _entryPoint() async {
@@ -341,6 +450,10 @@ class SettingsTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.fromLTRB(6, 8, 6, 8), child: Text(title));
+        padding: EdgeInsets.fromLTRB(6, 8, 6, 8),
+        child: Text(
+          title,
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ));
   }
 }
