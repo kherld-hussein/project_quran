@@ -18,16 +18,39 @@ dependencies:
   just_audio: ^0.2.1
   lottie: ^0.6.0
   modal_bottom_sheet: ^0.2.2
+  sliding_up_panel:
   shared_preferences: ^0.5.12+2
+  dio_flutter_transformer:
+  simple_permissions:
   flutter_screenutil: ^3.1.1
+  url_launcher:
+  ext_storage:
+  popup_menu:
+  badges:
   get: ^3.13.2
   share: ^0.6.5+3
   quick_actions: ^0.4.0+10
   animated_splash_screen: ^1.0.1+2
+  media_notification:
   flutter_svg: any
   motion_tab_bar: ^0.1.5
   statusbar_util: ^1.0.1
-  in_app_review:
+  in_app_review: null
+  pdf_flutter: any
+  launch_review: ^2.0.0
+  path_provider: null
+  flutter_full_pdf_viewer: any
+  flutter_pdfview: null
+  locales: ^0.1.0
+  advance_pdf_viewer: ^1.2.0
+  permission_handler: ^4.2.0+hotfix.1
+  dio:
+  intl:
+  epub_viewer: ^0.1.9
+  flutter_fullpdfview: ^1.1.5
+  syncfusion_flutter_pdfviewer: ^18.3.44-beta
+  panorama: ^0.0.2
+  shimmer:
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -37,3 +60,5 @@ flutter:
     - assets/audio/
     - assets/audio/Amma/
     - assets/images/
+    - assets/lottie/
+    - assets/

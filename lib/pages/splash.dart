@@ -16,9 +16,10 @@ class _SplashViewState extends State<SplashView> {
       body: AnimatedSplashScreen(
         duration: 3000,
         splash: Image.asset('assets/images/logo.png'),
+        splashIconSize: 200,
         nextScreen: PlayOut(),
-        splashTransition: SplashTransition.slideTransition,
-        pageTransitionType: PageTransitionType.scale,
+        splashTransition: SplashTransition.fadeTransition,
+        pageTransitionType: PageTransitionType.fade,
         backgroundColor: Color(0xff150927),
       ),
     );

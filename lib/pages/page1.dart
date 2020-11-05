@@ -1,11 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:launch_review/launch_review.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:project_quran/pages/home.dart';
 import 'package:project_quran/pages/page2.dart';
+import 'package:project_quran/pages/page3.dart';
 
 class PlayOut extends StatefulWidget {
   @override
@@ -19,29 +25,70 @@ class _PlayOutState extends State<PlayOut> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (Platform.isIOS || Platform.isMacOS) {
-        _inAppReview.isAvailable().then((bool isAvailable) {
-          setState(() {
-            _isAvailable = isAvailable;
-          });
-        });
-      } else {
-        setState(() {
-          _isAvailable = false;
-        });
-      }
+    createFileOfPdfUrl('assets/Quran.pdf', 'Quran.pdf').then((f) {
+      setState(() {
+        pathPDF = f.path;
+        print(pathPDF);
+      });
+    });
+    fromAsset('assets/Quran.pdf', 'Quran.pdf').then((f) {
+      setState(() {
+        corruptedPathPDF = f.path;
+      });
+    });
+    fromAsset('assets/Quran.pdf', 'Quran.pdf').then((f) {
+      setState(() {
+        pathPDF = f.path;
+      });
+    });
+    fromAsset('assets/Quran.pdf', 'Quran.pdf').then((f) {
+      setState(() {
+        landscapePathPdf = f.path;
+      });
     });
   }
 
-  Future<void> _requestReview() => _inAppReview.requestReview();
+  Future<File> createFileOfPdfUrl(String asset, String filename) async {
+    Completer<File> completer = Completer();
+    var dir = await getApplicationDocumentsDirectory();
+    File file = File("${dir.path}/$filename");
+    var data = await rootBundle.load(asset);
+    var bytes = data.buffer.asUint8List();
+    await file.writeAsBytes(bytes, flush: true);
+    completer.complete(file);
+    final url = "assets/Quran.pdf";
+    return completer.future;
+  }
+
+  String pathPDF = "";
+  String landscapePathPdf = "";
+  String remotePDFpath = "";
+  String corruptedPathPDF = "";
+
+  Future<File> fromAsset(String asset, String filename) async {
+    // To open from assets, you can copy them to the app storage folder, and the access them "locally"
+    Completer<File> completer = Completer();
+
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$filename");
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(children: [
-        Center(child: Image.asset('assets/images/logo.png')),
+        Center(child: Image.asset('assets/images/lg.png')),
         Container(
           child: CustomScrollView(
             slivers: <Widget>[
@@ -59,10 +106,6 @@ class _PlayOutState extends State<PlayOut> {
                   child: Row(
                     children: [
                       SizedBox(width: 90),
-                      // Image.asset(
-                      //   'assets/images/logo.png',
-                      //   scale: 8,
-                      // ),
                       Text(
                         'Offline ',
                         style: TextStyle(
@@ -106,19 +149,19 @@ class _PlayOutState extends State<PlayOut> {
                           size: 30,
                         ),
                         title: Text(
-                          "Listen Qur’ān ",
+                          "Holy Qur’ān - Idris Hussein",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       SizedBox(height: 10),
                       ListTile(
-                        onTap: () async {},
+                        onTap: () async => Get.to(Page3()),
                         leading: FaIcon(
                           FontAwesomeIcons.quran,
                           color: Color(0xffBB8834),
                         ),
                         title: Text(
-                          "Read Offline",
+                          "Read Qur’ān",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -137,7 +180,7 @@ class _PlayOutState extends State<PlayOut> {
                       ),
                       SizedBox(height: 10),
                       ListTile(
-                        onTap: () => _requestReview(),
+                        onTap: () => LaunchReview.launch(),
                         leading: FaIcon(
                           FontAwesomeIcons.thumbsUp,
                           color: Color(0xffBB8834),
@@ -151,15 +194,18 @@ class _PlayOutState extends State<PlayOut> {
                       SizedBox(height: 10),
                       ListTile(
                         onTap: () {
-                          showAboutDialog(
-                            context: context,
-                            applicationLegalese:
-                                'Advance Offline Qur’ān application with learning environment',
-                            applicationName: 'Offline Qur’ān',
-                            applicationVersion: 'Version: 1.0.0',
-                            applicationIcon:
+                          Get.defaultDialog(
+                              title: 'Offline Qur’ān App',
+                              textCustom: 'version: 1.0.0',
+                              content: Text(
+                                'version: 1.0.0',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              actions: [
                                 Image.asset('assets/images/logo.png', scale: 4),
-                          );
+                              ],
+                              middleText:
+                                  'Advance Offline Qur’ān application with learning environment');
                         },
                         leading: FaIcon(
                           FontAwesomeIcons.question,
@@ -183,18 +229,14 @@ class _PlayOutState extends State<PlayOut> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset('assets/images/QRbar.png'),
-                      // Center(
-                      //   child: Text(
-                      //     'Developer: Kherld@protonmail.com',
-                      //     style: TextStyle(
-                      //         color: Color(0xffBB8834),
-                      //         fontSize: 24,
-                      //         letterSpacing: 2,
-                      //         fontWeight: FontWeight.bold),
-                      //   ),
-                      // ),
                       Image.asset('assets/images/QRbar.png'),
                       Image.asset('assets/images/QRbar.png'),
+                      InkWell(
+                        child: Text(
+                          "Developer: Kherld Hussein",
+                          style: GoogleFonts.charm(color: Color(0xffBB8834)),
+                        ),
+                      )
                     ],
                   ),
                   color: Color(0xff150927).withOpacity(0.4),

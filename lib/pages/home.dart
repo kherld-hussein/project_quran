@@ -17,9 +17,10 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   AudioCache audioCache = AudioCache();
   AudioPlayer advancedPlayer = AudioPlayer();
+  bool playing = false;
   final _queue = <MediaItem>[
     MediaItem(
-      id: 'assets/audio/050.mp3',
+      id: 'assets/audio/Amma/90.mp3',
       album: 'Juzu',
       title: 'Surat Qaf',
       artist: '',
@@ -27,30 +28,32 @@ class _HomeViewState extends State<HomeView> {
       duration: Duration(minutes: 10),
     ),
     MediaItem(
-      id: 'assets/audio/051.mp3',
+      id: 'assets/audio/Amma/79.mp3',
       album: 'Juzu ',
-      title: 'Surat Dhariat',
+      title: 'Surat Naba',
       artist: '',
-      artUri: 'assets/images/url.png',
+      artUri: 'assets/images/logo.png',
       duration: Duration(minutes: 10),
     ),
-    // MediaItem(id: 'assets/audio/075.mp3', album: 'null', title: 'null'),
-    // MediaItem(id: 'assets/audio/100.mp3', album: 'null', title: 'null'),
-    // MediaItem(id: 'assets/audio/101.mp3', album: 'null', title: 'null'),
+    MediaItem(id: 'assets/audio/Amma/78.mp3', album: 'null', title: 'null'),
+    MediaItem(id: 'assets/audio/Amma/100.mp3', album: 'null', title: 'null'),
+    MediaItem(id: 'assets/audio/Amma/101.mp3', album: 'null', title: 'null'),
   ];
   Color color;
 
   @override
-  void dispose() {
-    AudioService.stop();
+  void initState() {
     if (playing == true) {
-      setState(() {
-        color = Color(0xffBB8834);
-      });
+      color = Color(0xffBB8834);
     } else {
       color = Colors.white;
     }
+    super.initState();
+  }
 
+  @override
+  void dispose() {
+    AudioService.stop();
     super.dispose();
   }
 
@@ -84,12 +87,11 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  bool playing = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff150927),
+      bottomSheet: Image.asset('assets/images/QRbar.png',fit: BoxFit.cover,),
       appBar: AppBar(
         backgroundColor: Color(0xff150927),
         iconTheme: IconThemeData(color: Color(0xffBB8834), size: 40),
@@ -120,12 +122,14 @@ class _HomeViewState extends State<HomeView> {
           // color: Colors.white,
           child: SingleChildScrollView(
             child: Column(
+              
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Card(
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 1.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -136,8 +140,9 @@ class _HomeViewState extends State<HomeView> {
                         style: TextStyle(color: Colors.white),
                       ),
                       onTap: () {
-                        audioCache.play('audio/1.mp3',
-                            isNotification: playing == true);
+                        audioCache.load('audio/1.mp3');
+                        audioCache.play('audio/1.mp3');
+                        playing = true;
                       },
                     ),
                   ),
@@ -147,10 +152,11 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                          backgroundColor: color,
                           label: Text(
-                        ' 78.',
-                        style: TextStyle(color: Color(0xffBB8834)),
-                      )),
+                            ' 78.',
+                            style: TextStyle(color: Color(0xffBB8834)),
+                          )),
                       title: Text(
                         "Surah An-Naba’ \n[ The News ]",
                         style: TextStyle(color: Colors.white),
@@ -163,6 +169,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 79.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -180,6 +187,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 80.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -197,6 +205,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 81.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -214,6 +223,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 82.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -231,6 +241,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 83.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -248,6 +259,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 84.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -265,6 +277,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 85.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -282,6 +295,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 86.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -299,6 +313,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 87.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -316,6 +331,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Color(0xff1D1133),
                     child: ListTile(
                       leading: Chip(
+                        backgroundColor: color,
                         label: Text(
                           ' 88.',
                           style: TextStyle(color: Color(0xffBB8834)),
@@ -421,7 +437,8 @@ class _HomeViewState extends State<HomeView> {
 
   _onShare(BuildContext context) async {
     final RenderBox box = context.findRenderObject();
-    await Share.share("Offline Quran App",
+    await Share.share(
+        "Advance Offline Qur’ān application with learning environment",
         subject: "offline/Ouran.app",
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }

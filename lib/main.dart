@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: "Offline Qur’ān",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.purple.shade900,
+        primarySwatch: Colors.purple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SplashView(),
