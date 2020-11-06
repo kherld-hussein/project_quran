@@ -53,7 +53,7 @@ class _Page2State extends State<Page2> {
                   builder: (context) => AlertDialog(
                         title: Text('Tell us your thoughts'),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         content: Text(
                             'We\'ll use the information you give us to improve our services '),

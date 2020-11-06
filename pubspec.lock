@@ -324,13 +324,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10-nullsafety"
-  media_notification:
-    dependency: "direct main"
-    description:
-      name: media_notification
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.5"
   meta:
     dependency: transitive
     description:
@@ -687,7 +680,7 @@ packages:
     source: hosted
     version: "1.3.0-nullsafety.2"
   url_launcher:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: url_launcher
       url: "https://pub.dartlang.org"

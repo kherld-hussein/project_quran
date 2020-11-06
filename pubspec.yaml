@@ -18,20 +18,20 @@ dependencies:
   just_audio: ^0.2.1
   lottie: ^0.6.0
   modal_bottom_sheet: ^0.2.2
-  sliding_up_panel:
+  #  sliding_up_panel:
   shared_preferences: ^0.5.12+2
-  dio_flutter_transformer:
-  simple_permissions:
+  #  dio_flutter_transformer:
+  #  simple_permissions:
   flutter_screenutil: ^3.1.1
   url_launcher:
-  ext_storage:
-  popup_menu:
-  badges:
+  #  ext_storage:
+  #  popup_menu:
+  #  badges:
   get: ^3.13.2
   share: ^0.6.5+3
   quick_actions: ^0.4.0+10
   animated_splash_screen: ^1.0.1+2
-  media_notification:
+  #  media_notification:
   flutter_svg: any
   motion_tab_bar: ^0.1.5
   statusbar_util: ^1.0.1
@@ -50,6 +50,9 @@ dependencies:
   flutter_fullpdfview: ^1.1.5
   syncfusion_flutter_pdfviewer: ^18.3.44-beta
   panorama: ^0.0.2
+  #  morpheus:
+  #  flutter_isolate:
+  #  marquee:
   shimmer:
 dev_dependencies:
   flutter_test:
