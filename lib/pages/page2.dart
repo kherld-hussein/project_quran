@@ -45,37 +45,14 @@ class _Page2State extends State<Page2> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Lottie.asset('assets/lottie/dev.json',
-                height: 80, width: 80, addRepaintBoundary: true),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text('Tell us your thoughts'),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        content: Text(
-                            'We\'ll use the information you give us to improve our services '),
-                        actions: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              FlatButton(
-                                  child: Text('OK'),
-                                  onPressed: () async {
-                                    if (await _inAppReview.isAvailable()) {
-                                      _requestReview();
-                                      Navigator.pop(context);
-                                    } else {
-                                      _inAppReview.openStoreListing();
-                                      Navigator.pop(context);
-                                    }
-                                  }),
-                            ],
-                          ),
-                        ],
-                      ));
+            icon:
+                Lottie.asset('assets/lottie/dev.json', height: 180, width: 180),
+            onPressed: () async {
+              if (await _inAppReview.isAvailable()) {
+                _requestReview();
+              } else {
+                _inAppReview.openStoreListing();
+              }
             },
           ),
         ],

@@ -149,7 +149,7 @@ class _PlayOutState extends State<PlayOut> {
                           size: 30,
                         ),
                         title: Text(
-                          "Holy Qur’ān - Idris Hussein",
+                          "Holy Qur’ān",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
@@ -231,10 +231,12 @@ class _PlayOutState extends State<PlayOut> {
                       Image.asset('assets/images/QRbar.png'),
                       Image.asset('assets/images/QRbar.png'),
                       Image.asset('assets/images/QRbar.png'),
-                      InkWell(
-                        child: Text(
-                          "Developer: Kherld Hussein",
-                          style: GoogleFonts.charm(color: Color(0xffBB8834)),
+                      Offstage(
+                        child: InkWell(
+                          child: Text(
+                            "Developer: Kherld Hussein",
+                            style: GoogleFonts.charm(color: Color(0xffBB8834)),
+                          ),
                         ),
                       )
                     ],
