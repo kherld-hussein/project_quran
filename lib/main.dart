@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project_quran/pages/splash.dart';
 import 'package:statusbar_util/statusbar_util.dart';
 
+import 'index.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   StatusbarUtil.setTranslucent();
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
             GoogleFonts.josefinSansTextTheme(Theme.of(context).textTheme),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      routes: {'index': (context) => Index()},
       home: SplashView(),
     );
   }

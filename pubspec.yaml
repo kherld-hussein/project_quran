@@ -53,6 +53,10 @@ dependencies:
   marquee: null
   shimmer: null
   rubber: ^0.2.7
+  native_pdf_view: ^2.1.1
+  screen: ^0.0.5
+  device_info: ^0.4.1+4
+  adaptive_breakpoints: ^0.0.2
 #  story_view: any
 dev_dependencies:
   flutter_test:

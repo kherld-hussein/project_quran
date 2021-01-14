@@ -25,6 +25,7 @@ class _PlayOutState extends State<PlayOut> {
   @override
   void initState() {
     super.initState();
+    push();
     createFileOfPdfUrl('assets/Quran.pdf', 'Quran.pdf').then((f) {
       setState(() {
         pathPDF = f.path;
@@ -81,6 +82,11 @@ class _PlayOutState extends State<PlayOut> {
     }
 
     return completer.future;
+  }
+
+  push() {
+    Timer(Duration(seconds: 3),
+        () => Navigator.pushReplacementNamed(context, "index"));
   }
 
   @override
@@ -155,7 +161,7 @@ class _PlayOutState extends State<PlayOut> {
                       ),
                       SizedBox(height: 10),
                       ListTile(
-                        onTap: () async => Get.to(Page3()),
+                        onTap: () => push(),
                         leading: FaIcon(
                           FontAwesomeIcons.quran,
                           color: Color(0xffBB8834),
