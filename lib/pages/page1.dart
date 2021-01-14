@@ -1,17 +1,13 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:in_app_review/in_app_review.dart';
 import 'package:launch_review/launch_review.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:project_quran/pages/home.dart';
 import 'package:project_quran/pages/page2.dart';
-import 'package:project_quran/pages/page3.dart';
+import 'package:project_quran/utils/constants.dart' as constants;
 
 class PlayOut extends StatefulWidget {
   @override
@@ -19,74 +15,14 @@ class PlayOut extends StatefulWidget {
 }
 
 class _PlayOutState extends State<PlayOut> {
-  final InAppReview _inAppReview = InAppReview.instance;
-  bool _isAvailable;
-
   @override
   void initState() {
     super.initState();
     push();
-    createFileOfPdfUrl('assets/Quran.pdf', 'Quran.pdf').then((f) {
-      setState(() {
-        pathPDF = f.path;
-        print(pathPDF);
-      });
-    });
-    fromAsset('assets/Quran.pdf', 'Quran.pdf').then((f) {
-      setState(() {
-        corruptedPathPDF = f.path;
-      });
-    });
-    fromAsset('assets/Quran.pdf', 'Quran.pdf').then((f) {
-      setState(() {
-        pathPDF = f.path;
-      });
-    });
-    fromAsset('assets/Quran.pdf', 'Quran.pdf').then((f) {
-      setState(() {
-        landscapePathPdf = f.path;
-      });
-    });
-  }
-
-  Future<File> createFileOfPdfUrl(String asset, String filename) async {
-    Completer<File> completer = Completer();
-    var dir = await getApplicationDocumentsDirectory();
-    File file = File("${dir.path}/$filename");
-    var data = await rootBundle.load(asset);
-    var bytes = data.buffer.asUint8List();
-    await file.writeAsBytes(bytes, flush: true);
-    completer.complete(file);
-    final url = "assets/Quran.pdf";
-    return completer.future;
-  }
-
-  String pathPDF = "";
-  String landscapePathPdf = "";
-  String remotePDFpath = "";
-  String corruptedPathPDF = "";
-
-  Future<File> fromAsset(String asset, String filename) async {
-    // To open from assets, you can copy them to the app storage folder, and the access them "locally"
-    Completer<File> completer = Completer();
-
-    try {
-      var dir = await getApplicationDocumentsDirectory();
-      File file = File("${dir.path}/$filename");
-      var data = await rootBundle.load(asset);
-      var bytes = data.buffer.asUint8List();
-      await file.writeAsBytes(bytes, flush: true);
-      completer.complete(file);
-    } catch (e) {
-      throw Exception('Error parsing asset file!');
-    }
-
-    return completer.future;
   }
 
   push() {
-    Timer(Duration(seconds: 3),
-        () => Navigator.pushReplacementNamed(context, "index"));
+    Timer(Duration(seconds: 1), () => Navigator.pushNamed(context, "index"));
   }
 
   @override
@@ -120,10 +56,7 @@ class _PlayOutState extends State<PlayOut> {
                             letterSpacing: 2,
                             fontWeight: FontWeight.bold),
                       ),
-                      Image.asset(
-                        'assets/images/logo.png',
-                        scale: 8,
-                      ),
+                      Image.asset('assets/images/logo.png', scale: 8),
                       Text(
                         'ur’ān',
                         style: TextStyle(

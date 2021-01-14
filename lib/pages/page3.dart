@@ -1,6 +1,8 @@
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:project_quran/bloc/pages.dart';
 import 'package:screen/screen.dart';
@@ -43,13 +45,11 @@ class _Page3State extends State<Page3> {
 
   /// Load PDF Documents
   Future<PDFDocument> _getDocument() async {
-    if (_document != null) {
-      return _document;
-    }
+    if (_document != null) return _document;
 
     /// Check Compatibility's [Android 5.0+]
     if (await hasSupport()) {
-      _document = await PDFDocument.openAsset('assets/pdf/quran.pdf');
+      _document = await PDFDocument.openAsset('assets/quran.pdf');
       return _document;
     } else {
       throw Exception(
@@ -125,138 +125,141 @@ class _Page3State extends State<Page3> {
     /// Prevent screen from going into sleep mode:
     Screen.keepOn(true);
     setState(() {
-      /// init current page
       constants.currentPage = widget.pages;
       pageController = _pageControllerBuilder();
     });
 
     super.initState();
   }
-
+  ScrollController _scrollController;
   @override
   Widget build(BuildContext context) {
     pageController = _pageControllerBuilder();
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xff150927),
-        iconTheme: IconThemeData(color: Color(0xffBB8834)),
-        title: Text(
-          'Al Qur\'an Viewer',
-          style: TextStyle(color: Color(0xffBB8834)),
-        ),
-        actions: <Widget>[
-          // IconButton(
-          //   icon: FaIcon(FontAwesomeIcons.bookmark),
-          //   onPressed: () => _pdfViewerKey.currentState?.openBookmarkView(),
-          // ),
-          IconButton(
-            icon: FaIcon(FontAwesomeIcons.shareAlt),
-            onPressed: () => _onShare(context),
-          ),
-          // IconButton(
-          //   icon: FaIcon(FontAwesomeIcons.angleUp),
-          //   onPressed: _pdfViewerController.previousPage,
-          // ),
-          // IconButton(
-          //   icon: FaIcon(FontAwesomeIcons.angleDown),
-          //   onPressed: _pdfViewerController.nextPage,
-          // )
-        ],
-      ),
-      body: FutureBuilder(
-        future: _getDocument(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return SafeArea(
-              child: PDFView.builder(
-                scrollDirection: Axis.horizontal,
-                document: snapshot.data,
-                controller: pageController,
-                builder: (PDFPageImage pageImage, bool isCurrentIndex) {
-                  currentPage = pageImage.pageNumber;
-                  constants.currentPage = currentPage;
+        body: FutureBuilder(
+          future: _getDocument(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return SafeArea(
+                child: PDFView.builder(
+                  scrollDirection: Axis.horizontal,
+                  document: snapshot.data,
+                  controller: pageController,
+                  builder: (PDFPageImage pageImage, bool isCurrentIndex) {
+                    currentPage = pageImage.pageNumber;
+                    constants.currentPage = currentPage;
+                    setLastViewedPage(currentPage);
+                    if (currentPage == constants.bookmarkedPage) {
+                      isBookmarked = true;
+                    } else {
+                      isBookmarked = false;
+                    }
+                    print("$isBookmarked:$currentPage");
 
-                  /// Update lastViewedPage
-                  setLastViewedPage(currentPage);
+                    if (isBookmarked) {
+                      _bookmarkWidget = Bookmark();
+                    } else {
+                      _bookmarkWidget = Container();
+                    }
 
-                  if (currentPage == constants.bookmarkedPage) {
-                    isBookmarked = true;
-                  } else {
-                    isBookmarked = false;
-                  }
-                  print("$isBookmarked:$currentPage");
-
-                  if (isBookmarked) {
-                    _bookmarkWidget = Bookmark();
-                  } else {
-                    _bookmarkWidget = Container();
-                  }
-
-                  Widget image = Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      Container(
-                        child: ExtendedImage.memory(
-                          pageImage.bytes,
-                          // gesture not applied (minScale,maxScale,speed...)
-                          mode: ExtendedImageMode.gesture,
-                          initGestureConfigHandler: (_) => GestureConfig(
-                            //minScale: 1,
-                            // animationMinScale:1,
-                            // maxScale: 1.1,
-                            //animationMaxScale: 1,
-                            speed: 1,
-                            inertialSpeed: 100,
-                            //inPageView: true,
-                            initialScale: 1,
-                            cacheGesture: false,
+                    Widget image = Stack(
+                      fit: StackFit.expand,
+                      children: <Widget>[
+                        Container(
+                          child: ExtendedImage.memory(
+                            pageImage.bytes,
+                            mode: ExtendedImageMode.gesture,
+                            initGestureConfigHandler: (_) => GestureConfig(
+                              //minScale: 1,
+                              // animationMinScale:1,
+                              // maxScale: 1.1,
+                              //animationMaxScale: 1,
+                              speed: 1,
+                              inertialSpeed: 100,
+                              //inPageView: true,
+                              initialScale: 1,
+                              cacheGesture: false,
+                            ),
+                            onDoubleTap: (ExtendedImageGestureState state) {
+                              final pointerDownPosition =
+                                  state.pointerDownPosition;
+                              final begin = state.gestureDetails.totalScale;
+                              double end;
+                              if (begin == _doubleTapScales[0]) {
+                                end = _doubleTapScales[1];
+                              } else {
+                                end = _doubleTapScales[0];
+                              }
+                              state.handleDoubleTap(
+                                scale: end,
+                                doubleTapPosition: pointerDownPosition,
+                              );
+                            },
                           ),
-                          onDoubleTap: (ExtendedImageGestureState state) {
-                            final pointerDownPosition =
-                                state.pointerDownPosition;
-                            final begin = state.gestureDetails.totalScale;
-                            double end;
-                            if (begin == _doubleTapScales[0]) {
-                              end = _doubleTapScales[1];
-                            } else {
-                              end = _doubleTapScales[0];
-                            }
-                            state.handleDoubleTap(
-                              scale: end,
-                              doubleTapPosition: pointerDownPosition,
-                            );
-                          },
                         ),
-                      ),
-                      isBookmarked == true ? _bookmarkWidget : Container(),
-                    ],
-                  );
-                  if (isCurrentIndex) {
-                    //currentPage=pageImage.pageNumber.round().toInt();
-                    image = Hero(
-                      tag: pageImage.pageNumber.toString(),
-                      child: Container(child: image),
-                      transitionOnUserGestures: true,
+                        isBookmarked == true ? _bookmarkWidget : Container(),
+                      ],
                     );
-                  }
-                  return image;
-                },
-                onPageChanged: (page) {},
-              ),
+                    if (isCurrentIndex) {
+                      //currentPage=pageImage.pageNumber.round().toInt();
+                      image = Hero(
+                        tag: pageImage.pageNumber.toString(),
+                        child: Container(child: image),
+                        transitionOnUserGestures: true,
+                      );
+                    }
+                    return image;
+                  },
+                  onPageChanged: (page) {},
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  'المعذرة لا يمكن طباعة المحتوى'
+                  'يرجي التحقق من أن جهازك يدعم نظام أندرويد بنسخته 5 على الأقل',
+                ),
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+        bottomNavigationBar: AnimatedBuilder(
+          animation: pageController,
+          builder: (context, Widget child) {
+            return AnimatedContainer(
+              width: size.width,
+              height: pageController.position.userScrollDirection ==
+                      ScrollDirection.reverse
+                  ? 0
+                  : 80,
+              duration: Duration(microseconds: 500),
+              child: child,
             );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'المعذرة لا يمكن طباعة المحتوى'
-                'يرجي التحقق من أن جهازك يدعم نظام أندرويد بنسخته 5 على الأقل',
+          },
+          child: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: FaIcon(FontAwesomeIcons.book),
+                label: 'الإنتقال إلى العلامة',
               ),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-    );
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.bookmark),
+                label: 'حفظ العلامة',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.listAlt),
+                label: 'الفهرس',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.grey[600],
+            selectedFontSize: 12,
+            onTap: (index) => _onItemTapped(index),
+          ),
+        ));
   }
 
   _onShare(BuildContext context) async {
@@ -277,8 +280,10 @@ class _Page3State extends State<Page3> {
 
 class SurahListBuilder extends StatefulWidget {
   final List<Pages> pages;
+  final ScrollController controller;
 
-  SurahListBuilder({Key key, this.pages}) : super(key: key);
+  SurahListBuilder({Key key, @required this.pages, @required this.controller})
+      : super(key: key);
 
   @override
   _SurahListBuilderState createState() => _SurahListBuilderState();
@@ -287,7 +292,7 @@ class SurahListBuilder extends StatefulWidget {
 class _SurahListBuilderState extends State<SurahListBuilder> {
   TextEditingController editingController = TextEditingController();
 
-  List<Pages> pages = List<Pages>();
+  List<Pages> pages;
 
   void initSurahListView() {
     if (pages.isNotEmpty) {
@@ -297,19 +302,12 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
   }
 
   void filterSearchResults(String query) {
-    /// Fill surah list if empty
     initSurahListView();
-
-    /// SearchList contains every surah
-    List<Pages> searchList = List<Pages>();
+    List<Pages> searchList;
     searchList.addAll(pages);
-
-    /// Contains matching surah(s)
-    List<Pages> listData = List<Pages>();
+    List<Pages> listData;
     if (query.isNotEmpty) {
-      /// Loop all surah(s)
       searchList.forEach((item) {
-        /// Filter by (titleAr:exact,title:partial,pageIndex)
         if (item.titleAr.contains(query) ||
             item.title.toLowerCase().contains(query.toLowerCase()) ||
             item.pageIndex.toString().contains(query)) {
@@ -317,14 +315,11 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
         }
       });
 
-      /// Fill surah List with searched surah(s)
       setState(() {
         pages.clear();
         pages.addAll(listData);
       });
       return;
-
-      /// Show all surah list
     } else {
       setState(() {
         pages.clear();
@@ -335,7 +330,6 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
 
   @override
   void initState() {
-    /// Init listView with all surah(s)
     initSurahListView();
     super.initState();
   }
@@ -345,47 +339,39 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
     return Container(
       child: Column(
         children: <Widget>[
-          /// Search field
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
-              cursorColor: Colors.green,
-              onChanged: (value) {
-                filterSearchResults(value);
-                print(value);
-              },
+              cursorColor: Color(0xff1D1133),
+              onChanged: (value) => filterSearchResults(value),
               controller: editingController,
               decoration: InputDecoration(
-                  labelText: "البحث عن سورة",
-                  // hintText: "البحث",
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)))),
+                labelText: "البحث عن سورة",
+                // hintText: "البحث",
+                prefixIcon: FaIcon(FontAwesomeIcons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+              ),
             ),
           ),
-
-          /// ListView represent all/searched surah(s)
           Expanded(
             child: ListView.builder(
               itemCount: pages.length,
               itemExtent: 80,
-              itemBuilder: (BuildContext context, int index) => ListTile(
+              controller: widget.controller,
+              itemBuilder: (BuildContext context, int index) => Card(
+                child: ListTile(
                   title: Text(pages[index].titleAr),
                   subtitle: Text(pages[index].title),
                   leading: Image(
-                      image:
-                          AssetImage("assets/images/${pages[index].place}.png"),
+                      image: AssetImage("assets/images/lg.png"),
                       width: 30,
                       height: 30),
                   trailing: Text("${pages[index].pageIndex}"),
-                  onTap: () {
-                    /// Push to Quran view ([int pages] represent surah page(reversed index))
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Page3(pages: pages[index].pages)));
-                  }),
+                  onTap: () => Get.to(Page3(pages: pages[index].pages)),
+                ),
+              ),
             ),
           ),
         ],
@@ -410,9 +396,9 @@ class _BookmarkState extends State<Bookmark> {
           alignment: Alignment.topLeft,
           child: Opacity(
             opacity: 0.8,
-            child: Icon(
-              Icons.bookmark,
-              color: Colors.red[800],
+            child: FaIcon(
+              FontAwesomeIcons.solidBookmark,
+              color: Color(0xffBB8834),
               size: 40.0,
             ),
           ),

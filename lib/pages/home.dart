@@ -46,13 +46,11 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   ];
   Color color;
   ScrollController _scrollController;
-  MotionTabController _tabController;
   String shortcut = "Read AL Qur’ān";
 
   @override
   void initState() {
     _scrollController = ScrollController();
-    _tabController = MotionTabController(initialIndex: 1, vsync: this);
     final QuickActions quickActions = QuickActions();
     quickActions.initialize((String shortcutType) {
       setState(() {
@@ -81,7 +79,6 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   void dispose() {
     AudioService.stop();
     _scrollController.dispose();
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -118,9 +115,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery
-        .of(context)
-        .size;
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color(0xff150927),
       appBar: AppBar(
@@ -147,7 +142,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                 child: ListTile(
                   leading: Chip(
                     backgroundColor:
-                    playing == false ? Colors.white : Color(0xffBB8834),
+                        playing == false ? Colors.white : Color(0xffBB8834),
                     label: Text(
                       ' 1.',
                       style: TextStyle(
@@ -167,7 +162,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                     style: TextStyle(color: Colors.white),
                   ),
                   subtitle:
-                  Offstage(offstage: playing == false, child: slider()),
+                      Offstage(offstage: playing == false, child: slider()),
                 ),
               ),
               SizedBox(height: 10),
@@ -423,7 +418,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
               return AnimatedContainer(
                 width: size.width,
                 height: _scrollController.position.userScrollDirection ==
-                    ScrollDirection.reverse
+                        ScrollDirection.reverse
                     ? 0
                     : 80,
                 duration: Duration(microseconds: 500),
@@ -454,13 +449,13 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                             final playing = playbackState?.playing ?? false;
                             return !playing
                                 ? IconButton(
-                              icon: FaIcon(FontAwesomeIcons.play),
-                              onPressed: () => AudioService.play(),
-                            )
+                                    icon: FaIcon(FontAwesomeIcons.play),
+                                    onPressed: () => AudioService.play(),
+                                  )
                                 : IconButton(
-                              icon: FaIcon(FontAwesomeIcons.pause),
-                              onPressed: () => AudioService.pause(),
-                            );
+                                    icon: FaIcon(FontAwesomeIcons.pause),
+                                    onPressed: () => AudioService.pause(),
+                                  );
                           }),
                       elevation: 0.1,
                     ),

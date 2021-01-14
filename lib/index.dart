@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:project_quran/pages/page3.dart';
 import 'package:project_quran/utils/constants.dart' as constants;
@@ -72,25 +74,29 @@ class _IndexState extends State<Index> {
     }
   }
 
+  ScrollController _scrollController;
+
   @override
   void initState() {
     /// set saved Brightness level
     Screen.setBrightness(constants.brightnessLevel);
     Screen.keepOn(true);
-
+    _scrollController = ScrollController();
     super.initState();
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        primaryColor: Colors.green,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          /*leading: IconButton(
+    final Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        /*leading: IconButton(
             icon: Icon(
               Icons.tune,
               color: Colors.white,
@@ -100,55 +106,71 @@ class _IndexState extends State<Index> {
                   builder:(context)=>SliderAlert());
             },
           ),*/
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                  padding: const EdgeInsets.all(8.0), child: Text('الفهرس')),
-              Icon(
-                Icons.format_list_numbered_rtl,
-                color: Colors.white,
-              ),
-            ],
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+                padding: const EdgeInsets.all(8.0), child: Text('الفهرس')),
+            FaIcon(
+              FontAwesomeIcons.solidListAlt,
+              color: Colors.white,
+            ),
+          ],
         ),
-        body: Container(
-          child: Directionality(
-            textDirection: TextDirection.rtl,
+      ),
+      body: Container(
+        child: Directionality(
+          textDirection: TextDirection.rtl,
 
-            /// Use future builder and DefaultAssetBundle to load the local JSON file
-            child: new FutureBuilder(
-                future: DefaultAssetBundle.of(context)
-                    .loadString('assets/json/surah.json'),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    List<Pages> surahList = parseJson(snapshot.data.toString());
-                    return surahList.isNotEmpty
-                        ? new SurahListBuilder(pages: surahList)
-                        : new Center(child: new CircularProgressIndicator());
-                  } else {
-                    return new Center(child: new CircularProgressIndicator());
-                  }
-                }),
-          ),
+          /// Use future builder and DefaultAssetBundle to load the local JSON file
+          child: new FutureBuilder(
+              future: DefaultAssetBundle.of(context)
+                  .loadString('assets/json/surah.json'),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<Pages> surahList = parseJson(snapshot.data.toString());
+                  return surahList.isNotEmpty
+                      ? new SurahListBuilder(
+                          pages: surahList,
+                          controller: _scrollController,
+                        )
+                      : new Center(child: new CircularProgressIndicator());
+                } else {
+                  return new Center(child: new CircularProgressIndicator());
+                }
+              }),
         ),
-        bottomNavigationBar: BottomNavigationBar(
+      ),
+      bottomNavigationBar: AnimatedBuilder(
+        animation: _scrollController,
+        builder: (context, Widget child) {
+          return AnimatedContainer(
+            width: size.width,
+            height: _scrollController.position.userScrollDirection ==
+                    ScrollDirection.reverse
+                ? 0
+                : 80,
+            duration: Duration(microseconds: 500),
+            child: child,
+          );
+        },
+        child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.book),
-              title: Text('الإنتقال إلى العلامة'),
+              icon: FaIcon(FontAwesomeIcons.book),
+              label: 'الإنتقال إلى العلامة',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.chrome_reader_mode),
-              title: Text('مواصلة القراءة'),
+              icon: FaIcon(FontAwesomeIcons.chromecast),
+              label: 'مواصلة القراءة',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.highlight),
-              title: Text('إضاءة الشاشة'),
+              icon: FaIcon(FontAwesomeIcons.highlighter),
+              label: 'إضاءة الشاشة',
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.grey[600],
+          selectedItemColor: Color(0xffBB8834),
           selectedFontSize: 12,
           onTap: (index) => _onItemTapped(index),
         ),
@@ -203,7 +225,7 @@ class _SliderAlertState extends State<SliderAlert> {
           height: 24,
           child: Row(
             children: <Widget>[
-              Icon(Icons.highlight, size: 24),
+              FaIcon(FontAwesomeIcons.highlighter, size: 24),
               Slider(
                 value: tempBrightnessLevel,
                 onChanged: (_brightness) {
@@ -221,10 +243,9 @@ class _SliderAlertState extends State<SliderAlert> {
         ),
         actions: <Widget>[
           FlatButton(
-              child: Text("إلغاء", textDirection: TextDirection.rtl),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
+            child: Text("إلغاء", textDirection: TextDirection.rtl),
+            onPressed: Get.back,
+          ),
           FlatButton(
             child: Text("حفظ", textDirection: TextDirection.rtl),
             onPressed: () {

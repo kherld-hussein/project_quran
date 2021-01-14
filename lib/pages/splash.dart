@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -41,6 +39,7 @@ class _SplashViewState extends State<SplashView> {
       constants.bookmarkedPage = constants.DEFAULT_BOOKMARKED_PAGE;
     }
   }
+
   @override
   void initState() {
     /// get Saved preferences
